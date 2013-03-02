@@ -18,8 +18,33 @@
 package main
 
 import (
+    "fmt"
+    "os"
+)
+
+const (
+    helpMessage = "Usage: %s [command]\n\nValid commands are:\n" +
+                  "commit\t\tCommit current changes\n" +
+                  "help\t\tDisplay this message\n"
 )
 
 func main() {
-    
+    if len(os.Args) < 2 {
+        displayHelp()
+        return
+    }
+
+    //Check command
+    switch os.Args[1] {
+        case "commit":
+        case "help":
+            displayHelp()
+        default:
+            displayHelp()
+    }
+}
+
+
+func displayHelp() {
+    fmt.Printf(helpMessage, os.Args[0])
 }
