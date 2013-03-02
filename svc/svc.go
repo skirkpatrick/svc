@@ -23,8 +23,17 @@ import (
 )
 
 const (
-    helpMessage = "Usage: %s [command]\n\nValid commands are:\n" +
+    //Add new commands to this list
+    helpMessage = "Usage: %s <command> [<flags>]\n\nValid commands are:\n" +
+                  "new\t\tInitialize new SVC repo in current directory\n" +
                   "commit\t\tCommit current changes\n" +
+                  "status\t\tList branch status\n" +
+                  "branch\t\tCreate new feature branch\n" +
+                  "merge <b>\tMerge branch <b> into this branch\n" +
+                  "log\t\tList commit history\n" +
+                  "reset\t\tReset all current changes\n" +
+                  "revert <v>\tRevert to <v> commits ago\n" +
+                  "tutorial\tLearn to use SVC\n" +
                   "help\t\tDisplay this message\n"
 )
 
@@ -35,8 +44,17 @@ func main() {
     }
 
     //Check command
+    //Add new commands to this list
     switch os.Args[1] {
+        case "new":
         case "commit":
+        case "status":
+        case "branch":
+        case "merge":
+        case "log":
+        case "reset":
+        case "revert":
+        case "tutorial":
         case "help":
             displayHelp()
         default:
