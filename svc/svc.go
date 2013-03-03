@@ -20,6 +20,7 @@ package main
 import (
     "fmt"
     "os"
+    "github.com/skirkpatrick/svc/initialize"
 )
 
 const (
@@ -47,6 +48,7 @@ func main() {
     //Add new commands to this list
     switch os.Args[1] {
         case "init":
+            initialize.Initialize()
         case "commit":
         case "status":
         case "branch":
