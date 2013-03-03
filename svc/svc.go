@@ -25,7 +25,7 @@ import (
 const (
     //Add new commands to this list
     helpMessage = "Usage: %s <command> [<flags>]\n\nValid commands are:\n" +
-                  "new\t\tInitialize new SVC repo in current directory\n" +
+                  "init\t\tInitialize new SVC repo in current directory\n" +
                   "commit\t\tCommit current changes\n" +
                   "status\t\tList branch status\n" +
                   "branch\t\tCreate new feature branch\n" +
@@ -46,7 +46,7 @@ func main() {
     //Check command
     //Add new commands to this list
     switch os.Args[1] {
-        case "new":
+        case "init":
         case "commit":
         case "status":
         case "branch":
