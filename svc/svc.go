@@ -34,6 +34,7 @@ const (
                   "log\t\tList commit history\n" +
                   "reset\t\tReset all current changes\n" +
                   "revert <v>\tRevert to <v> commits ago\n" +
+                  "delete\t\tRemove SVC repo in current directory\n" +
                   "tutorial\tLearn to use SVC\n" +
                   "help\t\tDisplay this message\n"
 )
@@ -56,6 +57,7 @@ func main() {
         case "log":
         case "reset":
         case "revert":
+        case "delete":
         case "tutorial":
         case "help":
             displayHelp()
