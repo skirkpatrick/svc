@@ -9,10 +9,15 @@ import (
     "os"
 )
 
+const (
+    objectDir = ".svc"
+)
+
 // Check parent directories until root for existing repo.
 // Probably a more elegant way to do this.
 func RecursivelyCheckForRepo(file *os.File) (found bool, dir string) {
     found = false
+    origDir := file.Name()
     dir = file.Name()
 
     // Check for existing repo up to root
@@ -32,6 +37,10 @@ func RecursivelyCheckForRepo(file *os.File) (found bool, dir string) {
     // Check root
     if checkForRepo(file) { return true, dir }
 
+    // Change back to original directory
+    err := os.Chdir(origDir)
+    if err != nil { panic(err) }
+
     return
 }
 
@@ -41,7 +50,7 @@ func checkForRepo(file *os.File) bool {
     names, err := file.Readdirnames(0)
     if err != nil { panic(err) }
     for _, name := range names {
-        if name == ".svc" { return true }
+        if name == objectDir { return true }
         fmt.Printf("Reading %s\n", name)
     }
     return false
