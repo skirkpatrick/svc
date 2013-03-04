@@ -23,4 +23,7 @@ func Initialize() {
     }
 
     fmt.Printf("Initializing empty repo in %s\n", curDir)
+
+    // Make .svc directory and create metadata file
+    dirutils.InitializeRepo()
 }

@@ -11,6 +11,8 @@ import (
 
 const (
     objectDir = ".svc"
+    permissions = 0777
+    metafileName = "metadata"
 )
 
 // Check parent directories until root for existing repo.
@@ -54,4 +56,20 @@ func checkForRepo(file *os.File) bool {
         fmt.Printf("Reading %s\n", name)
     }
     return false
+}
+
+
+// Create new object directory and initialize metadata file
+func InitializeRepo() {
+    // Create object directory
+    err := os.Mkdir(objectDir, permissions)
+    if err != nil { panic(err) }
+
+    // Create metadata file
+    file, err := os.Create(metafileName)
+    if err != nil { panic(err) }
+    file.Close()
+
+    // Initialize metadata file
+    // TODO
 }
