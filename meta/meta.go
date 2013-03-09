@@ -71,8 +71,12 @@ func (repo *Repo) SetCurrent(current string) error {
 // position in the []Branch.
 // If the branch is not found, nil and -1 are returned.
 func (repo *Repo) Find(branchname string) (branch *Branch, pos int) {
-    branch, pos = nil, -1
-    return
+    for i, b := range repo.Branch {
+        if b.Title == branchname {
+            return &b, i
+        }
+    }
+    return nil, -1
 }
 
 // Print outputs content of repo to standard out.
