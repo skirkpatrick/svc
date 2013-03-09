@@ -57,7 +57,26 @@ func InitializeMetafile() {
 func WriteMetadata(file *os.File, repo Repo) {
 }
 
-// Useful for debugging
+
+/// Begin repo functions ///
+
+// SetCurrent sets current branch on repo.
+// Returns error if current is not a valid branch in repo.
+func (repo *Repo) SetCurrent(current string) error {
+    return nil
+}
+
+// Find finds a Branch in a repo, if it exists.
+// If the branch is found, it is returned along with its
+// position in the []Branch.
+// If the branch is not found, nil and -1 are returned.
+func (repo *Repo) Find(branchname string) (branch *Branch, pos int) {
+    branch, pos = nil, -1
+    return
+}
+
+// Print outputs content of repo to standard out.
+// Useful for debugging.
 func (repo *Repo) Print() {
     fmt.Printf("Current: %q\n", repo.Current)
     for _, branch := range repo.Branch {
