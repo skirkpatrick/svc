@@ -63,6 +63,11 @@ func WriteMetadata(file *os.File, repo Repo) {
 // SetCurrent sets current branch on repo.
 // Returns error if current is not a valid branch in repo.
 func (repo *Repo) SetCurrent(current string) error {
+    b,_ := repo.Find(current)
+    if b == nil {
+        return fmt.Errorf("branch %q not found", current)
+    }
+    repo.Current = b.Title
     return nil
 }
 
