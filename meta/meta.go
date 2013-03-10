@@ -114,3 +114,48 @@ func (repo *Repo) Print() {
         }
     }
 }
+
+
+/// Begin Branch functions ///
+
+// Branch.Copy() returns an exact copy of a Branch.
+func (branch *Branch) Copy() *Branch {
+    newBranch := new(Branch)
+    newBranch.XMLName = branch.XMLName
+    newBranch.Title = branch.Title
+    newBranch.Commit = make([]Commit, len(branch.Commit))
+    for i := range newBranch.Commit {
+        newBranch.Commit[i] = *branch.Commit[i].Copy()
+    }
+    return newBranch
+}
+
+
+/// Begin Commit functions ///
+
+// Commit.Copy() returns an exact copy of a Commit.
+func (commit *Commit) Copy() *Commit {
+    newCommit := new(Commit)
+    newCommit.XMLName = commit.XMLName
+    newCommit.SHA = commit.SHA
+    newCommit.Title = commit.Title
+    newCommit.Message = commit.Message
+    newCommit.Timestamp = commit.Timestamp
+    newCommit.File = make([]File, len(commit.File))
+    for i := range newCommit.File {
+        newCommit.File[i] = *commit.File[i].Copy()
+    }
+    return newCommit
+}
+
+
+/// Begin File Functions ///
+
+// File.Copy() returns an exact copy of a meta.File.
+func (file *File) Copy() *File {
+    newFile := new(File)
+    newFile.XMLName = file.XMLName
+    newFile.SHA = file.SHA
+    newFile.Title = file.Title
+    return newFile
+}
