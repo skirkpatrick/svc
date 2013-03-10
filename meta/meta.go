@@ -71,6 +71,18 @@ func (repo *Repo) SetCurrent(current string) error {
     return nil
 }
 
+// AddBranch adds a new, empty branch to an existing repo.
+// If a branch by the same name already exists in the repo,
+// an error is returned.
+func (repo *Repo) AddBranch(branch *Branch) error {
+    b,_ := repo.Find(branch.Title)
+    if b != nil {
+        return fmt.Errorf("branch %q already exists", branch.Title)
+    }
+    repo.Branch = append(repo.Branch, *branch)
+    return nil
+}
+
 // Find finds a Branch in a repo, if it exists.
 // If the branch is found, it is returned along with its
 // position in the []Branch.
