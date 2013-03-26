@@ -39,6 +39,7 @@ type File struct {
 }
 
 
+// ReadMetadata reads metadata into repo struct
 func ReadMetadata(filename string) *Repo {
     // Reading data this way because it's easier
     // for reading a []byte of unkown size
@@ -51,10 +52,18 @@ func ReadMetadata(filename string) *Repo {
     return repo
 }
 
+// InitializeMetafile creates initial metadata file
 func InitializeMetafile() {
 }
 
-func WriteMetadata(file *os.File, repo Repo) {
+// WriteMetadata writes repo to metadata file "file"
+func WriteMetadata(file *os.File, repo *Repo) {
+    xml_raw, err := xml.Marshal(repo)
+    if err != nil { panic(err) }
+
+    // This looks too much like C...must be amore elegant way
+    _, err = file.Write(append([]byte(xml.Header), xml_raw...))
+    if err != nil { panic(err) }
 }
 
 
