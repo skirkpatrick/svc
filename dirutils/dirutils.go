@@ -6,13 +6,11 @@ package dirutils
 
 import (
     "os"
-    "github.com/skirkpatrick/svc/meta"
 )
 
 const (
-    objectDir = ".svc"
+    ObjectDir = ".svc"
     permissions = 0777
-    metafileName = "metadata"
 )
 
 // Check parent directories until root for existing repo.
@@ -51,23 +49,23 @@ func checkForRepo(file *os.File) bool {
     names, err := file.Readdirnames(0)
     if err != nil { panic(err) }
     for _, name := range names {
-        if name == objectDir { return true }
+        if name == ObjectDir { return true }
     }
     return false
 }
 
 
-// Create new object directory and initialize metadata file
+// GetCurrentDirectory returns a *File to the current directory
+func GetCurrentDirectory() (string, *os.File, error) {
+    curDir, err := os.Getwd()
+    if err != nil { return curDir, nil, err }
+    file, err := os.Open(curDir)
+    return curDir, file, err
+}
+
+
+// InitializeRepo creates new object directory
 func InitializeRepo() {
-    // Create object directory
-    err := os.Mkdir(objectDir, permissions)
+    err := os.Mkdir(ObjectDir, permissions)
     if err != nil { panic(err) }
-
-    // Create metadata file
-    file, err := os.Create(objectDir + "/" +  metafileName)
-    if err != nil { panic(err) }
-    defer file.Close()
-
-    // Initialize metadata file
-    meta.InitializeMetafile(file)
 }

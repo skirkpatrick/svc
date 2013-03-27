@@ -9,6 +9,11 @@ import (
     "os"
     "io/ioutil"
     "fmt"
+    "github.com/skirkpatrick/svc/dirutils"
+)
+
+const (
+    metafileName = "metadata"
 )
 
 type Repo struct {
@@ -52,17 +57,6 @@ func ReadMetadata(filename string) *Repo {
     return repo
 }
 
-// InitializeMetafile creates initial metadata file
-func InitializeMetafile(file *os.File) {
-    repo := new(Repo)
-    branch := new(Branch)
-    branch.Title = "master"
-    repo.AddBranch(branch)
-    err := repo.SetCurrent("master")
-    if err != nil { panic(err) }
-    WriteMetadata(file, repo)
-}
-
 // WriteMetadata writes repo to metadata file "file"
 func WriteMetadata(file *os.File, repo *Repo) {
     xml_raw, err := xml.Marshal(repo)
@@ -71,6 +65,28 @@ func WriteMetadata(file *os.File, repo *Repo) {
     // This looks too much like C...must be a more elegant way
     _, err = file.Write(append([]byte(xml.Header), xml_raw...))
     if err != nil { panic(err) }
+}
+
+// InitializeRepo initializes metadata file for a new repo
+func InitializeRepo() {
+    // Create metadata file
+    file, err := os.Create(dirutils.ObjectDir + "/" + metafileName)
+    if err != nil { panic(err) }
+    defer file.Close()
+
+    // Initialize metadata file
+    InitializeMetafile(file)
+}
+
+// InitializeMetafile writes initial metadata to file
+func InitializeMetafile(file *os.File) {
+    repo := new(Repo)
+    branch := new(Branch)
+    branch.Title = "master"
+    repo.AddBranch(branch)
+    err := repo.SetCurrent("master")
+    if err != nil { panic(err) }
+    WriteMetadata(file, repo)
 }
 
 
