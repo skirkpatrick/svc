@@ -53,7 +53,14 @@ func ReadMetadata(filename string) *Repo {
 }
 
 // InitializeMetafile creates initial metadata file
-func InitializeMetafile() {
+func InitializeMetafile(file *os.File) {
+    repo := new(Repo)
+    branch := new(Branch)
+    branch.Title = "master"
+    repo.AddBranch(branch)
+    err := repo.SetCurrent("master")
+    if err != nil { panic(err) }
+    WriteMetadata(file, repo)
 }
 
 // WriteMetadata writes repo to metadata file "file"
@@ -61,7 +68,7 @@ func WriteMetadata(file *os.File, repo *Repo) {
     xml_raw, err := xml.Marshal(repo)
     if err != nil { panic(err) }
 
-    // This looks too much like C...must be amore elegant way
+    // This looks too much like C...must be a more elegant way
     _, err = file.Write(append([]byte(xml.Header), xml_raw...))
     if err != nil { panic(err) }
 }

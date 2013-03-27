@@ -5,8 +5,8 @@
 package dirutils
 
 import (
-    "fmt"
     "os"
+    "github.com/skirkpatrick/svc/meta"
 )
 
 const (
@@ -24,7 +24,6 @@ func RecursivelyCheckForRepo(file *os.File) (found bool, dir string) {
 
     // Check for existing repo up to root
     for dir != "/" {
-        fmt.Printf("In dir %s\n", dir)
         if checkForRepo(file) { return true, dir }
 
         // cd to parent
@@ -53,7 +52,6 @@ func checkForRepo(file *os.File) bool {
     if err != nil { panic(err) }
     for _, name := range names {
         if name == objectDir { return true }
-        fmt.Printf("Reading %s\n", name)
     }
     return false
 }
@@ -66,10 +64,10 @@ func InitializeRepo() {
     if err != nil { panic(err) }
 
     // Create metadata file
-    file, err := os.Create(metafileName)
+    file, err := os.Create(objectDir + "/" +  metafileName)
     if err != nil { panic(err) }
-    file.Close()
+    defer file.Close()
 
     // Initialize metadata file
-    // TODO
+    meta.InitializeMetafile(file)
 }
