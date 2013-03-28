@@ -23,8 +23,9 @@ func Status() {
 
 
 // GetIgnore reads the .svcignore file
-func GetIgnore () {
+func GetIgnore (dir *os.File) map[string]bool {
     // TODO
+    return make(map[string]bool)
 }
 
 
@@ -38,16 +39,17 @@ func GetFileStatus() map[string]int {
     repoDir, err := dirutils.OpenRepo()
     if err != nil { panic(err) }
 
-    files := getFileStatus(repo, repoDir, "")
+    files := readFiles(repo, repoDir, "")
 
     // Check if modified, unmodified, or new
+    markStatus(repo, files)
 
     return files
 }
 
 
-// getFileStatus is a recursive function to map file names to status
-func getFileStatus(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
+// readFiles is a recursive function to read all files in repo
+func readFiles(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
     files, err := dirutils.GetDirectoryContents(dir)
     if err != nil { panic(err) }
 
@@ -58,12 +60,14 @@ func getFileStatus(repo *meta.Repo, dir *os.File, prefix string) map[string]int 
         if file.IsDir() {
             recurseDir, err := os.Open(prefix + file.Name())
             if err != nil { panic(err) }
-            stats := getFileStatus(repo, recurseDir, prefix + file.Name() + "/")
+            defer recurseDir.Close()
+            stats := readFiles(repo, recurseDir, prefix + file.Name() + "/")
             for key, value := range stats {
                 filemap[key] = value
             }
         } else {
             // Check if ignored
+            // TODO
             filemap[prefix + file.Name()] = NEW
         }
     }
@@ -71,10 +75,59 @@ func getFileStatus(repo *meta.Repo, dir *os.File, prefix string) map[string]int 
 }
 
 
+// markStatus marks file status
+func markStatus(repo *meta.Repo, files map[string]int) {
+    branch, _ := repo.Find(repo.Current)
+
+    // Check if initial commit
+    numCommits := len(branch.Commit)
+    if numCommits == 0 { return }
+
+    for _, cached := range branch.Commit[numCommits-1].File {
+        // compute sha and compare to cached
+        // TODO
+        cached.Title = ""
+    }
+}
+
+
+// getStatusBins separates files based on status
+func getStatusBins(files map[string]int) [][]string {
+    bins := make([][]string, 4)
+    for i := range bins {
+        bins[i] = make([]string, 0)
+    }
+
+    for key, value := range files {
+        bins[value] = append(bins[value], key)
+    }
+
+    return bins
+}
+
+
 // printStatus prints the repo's current status
 func printStatus() {
     files := GetFileStatus()
-    for key, value := range files {
-        fmt.Printf("%s: %v\n", key, value)
+    bins := getStatusBins(files)
+    for i := range bins {
+        if len(bins[i]) == 0 { continue }
+        switch i {
+            case MODIFIED:
+                fmt.Println("\x1b[31;1mModified:\x1b[0m")
+            case NEW:
+                fmt.Println("\x1b[31;1mNew:\x1b[0m")
+            case UNTRACKED:
+                fmt.Println("\x1b[31;1mUntracked:\x1b[0m")
+            case UNMODIFIED:
+                continue;
+        }
+        for j := range bins[i] {
+            fmt.Printf("%s\n", bins[i][j])
+        }
+    }
+
+    if len(bins[UNMODIFIED]) + len(bins[UNTRACKED]) == len(files) {
+        fmt.Println("\x1b[32;1mNothing to commit\x1b[0m")
     }
 }
