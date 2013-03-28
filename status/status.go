@@ -12,20 +12,13 @@ const (
     UNMODIFIED int = 0
     MODIFIED int = 1
     UNTRACKED int = 2
+    NEW int = 3
 )
 
 
 // Status prints the current repo's status
 func Status() {
-    // Read metadata
-    repo, err := meta.Open()
-    if err != nil { panic(err) }
-
-    // Open base directory
-    repoDir, err := dirutils.OpenRepo()
-    if err != nil { panic(err) }
-
-    printStatus(repo, repoDir)
+    printStatus()
 }
 
 
@@ -36,8 +29,25 @@ func GetIgnore () {
 
 
 // GetFileStatus maps file names to their status.
-func GetFileStatus(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
-    // GetIgnore
+func GetFileStatus() map[string]int {
+    // Read metadata
+    repo, err := meta.Open()
+    if err != nil { panic(err) }
+
+    // Open base directory
+    repoDir, err := dirutils.OpenRepo()
+    if err != nil { panic(err) }
+
+    files := getFileStatus(repo, repoDir, "")
+
+    // Check if modified, unmodified, or new
+
+    return files
+}
+
+
+// getFileStatus is a recursive function to map file names to status
+func getFileStatus(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
     files, err := dirutils.GetDirectoryContents(dir)
     if err != nil { panic(err) }
 
@@ -48,13 +58,13 @@ func GetFileStatus(repo *meta.Repo, dir *os.File, prefix string) map[string]int 
         if file.IsDir() {
             recurseDir, err := os.Open(prefix + file.Name())
             if err != nil { panic(err) }
-            stats := GetFileStatus(repo, recurseDir, prefix + file.Name() + "/")
+            stats := getFileStatus(repo, recurseDir, prefix + file.Name() + "/")
             for key, value := range stats {
                 filemap[key] = value
             }
         } else {
-            // Check if modified or ignored
-            filemap[prefix + file.Name()] = MODIFIED
+            // Check if ignored
+            filemap[prefix + file.Name()] = NEW
         }
     }
     return filemap
@@ -62,8 +72,8 @@ func GetFileStatus(repo *meta.Repo, dir *os.File, prefix string) map[string]int 
 
 
 // printStatus prints the repo's current status
-func printStatus(repo *meta.Repo, repoDir *os.File) {
-    files := GetFileStatus(repo, repoDir, "")
+func printStatus() {
+    files := GetFileStatus()
     for key, value := range files {
         fmt.Printf("%s: %v\n", key, value)
     }
