@@ -89,6 +89,24 @@ func InitializeMetafile(file *os.File) {
     WriteMetadata(file, repo)
 }
 
+// Open returns the metadata file for the current repo (if it exists)
+func Open() (*Repo, error) {
+    // Find file location
+    curDir, file, err := dirutils.GetCurrentDirectory()
+    if err != nil { return nil, err }
+    defer file.Close()
+
+    exists, dir := dirutils.RecursivelyCheckForRepo(file)
+    if !exists {
+        err = fmt.Errorf("No existing SVC repo found in %s", curDir)
+        return nil, err
+    }
+
+    filename := dir + "/" + dirutils.ObjectDir + "/" + metafileName
+    repo := ReadMetadata(filename)
+    return repo, nil
+}
+
 
 /// Begin repo functions ///
 

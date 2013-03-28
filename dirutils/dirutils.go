@@ -6,6 +6,7 @@ package dirutils
 
 import (
     "os"
+    "fmt"
 )
 
 const (
@@ -55,12 +56,29 @@ func checkForRepo(file *os.File) bool {
 }
 
 
+// OpenRepo returns a *File to the current repo base directory
+func OpenRepo() (*os.File, error) {
+    curDir, dir, err := GetCurrentDirectory()
+    if err != nil { return nil, err }
+    exists, repoDir := RecursivelyCheckForRepo(dir)
+    if !exists { return nil, fmt.Errorf("No repo found in %s", curDir) }
+    dir, err = os.Open(repoDir)
+    return dir, err
+}
+
+
 // GetCurrentDirectory returns a *File to the current directory
 func GetCurrentDirectory() (string, *os.File, error) {
     curDir, err := os.Getwd()
     if err != nil { return curDir, nil, err }
     file, err := os.Open(curDir)
     return curDir, file, err
+}
+
+
+// GetDirectoryContents returns a slice of files/folders in dir
+func GetDirectoryContents(dir *os.File) ([]os.FileInfo, error) {
+    return dir.Readdir(0)
 }
 
 
