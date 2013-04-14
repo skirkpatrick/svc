@@ -5,6 +5,7 @@ import (
     "fmt"
     "github.com/skirkpatrick/svc/dirutils"
     "github.com/skirkpatrick/svc/meta"
+    "github.com/skirkpatrick/svc/crypto"
 )
 
 
@@ -13,6 +14,7 @@ const (
     MODIFIED int = 1
     UNTRACKED int = 2
     NEW int = 3
+    REMOVED int = 4
 )
 
 
@@ -86,14 +88,23 @@ func markStatus(repo *meta.Repo, files map[string]int) {
     for _, cached := range branch.Commit[numCommits-1].File {
         // compute sha and compare to cached
         // TODO
-        cached.Title = ""
+        title := cached.Title
+        workingSHA, err := crypto.SHA512(title)
+        switch {
+        case err != nil:
+            files[title] = REMOVED
+        case workingSHA != cached.SHA:
+            files[title] = MODIFIED
+        default:
+            files[title] = UNMODIFIED
+        }
     }
 }
 
 
 // getStatusBins separates files based on status
 func getStatusBins(files map[string]int) [][]string {
-    bins := make([][]string, 4)
+    bins := make([][]string, 5)
     for i := range bins {
         bins[i] = make([]string, 0)
     }
@@ -119,6 +130,8 @@ func printStatus() {
                 fmt.Println("\x1b[31;1mNew:\x1b[0m")
             case UNTRACKED:
                 fmt.Println("\x1b[31;1mUntracked:\x1b[0m")
+            case REMOVED:
+                fmt.Println("\x1b[31;1mRemoved:\x1b[0m")
             case UNMODIFIED:
                 continue;
         }
