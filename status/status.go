@@ -121,6 +121,18 @@ func getStatusBins(files map[string]int) [][]string {
 }
 
 
+// IsClean returns true if the file status map indicates no changes to commit
+func IsClean(files map[string]int, bins [][]string) bool {
+    if bins == nil {
+        bins = getStatusBins(files)
+    }
+    if len(bins[UNMODIFIED]) + len(bins[UNTRACKED]) == len(files) {
+        return true
+    }
+    return false
+}
+
+
 // printStatus prints the repo's current status
 func printStatus() {
     files, err := GetFileStatus()
@@ -147,7 +159,7 @@ func printStatus() {
         }
     }
 
-    if len(bins[UNMODIFIED]) + len(bins[UNTRACKED]) == len(files) {
+    if IsClean(files, bins) {
         fmt.Println("\x1b[32;1mNothing to commit\x1b[0m")
     }
 }
