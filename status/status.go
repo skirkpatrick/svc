@@ -60,6 +60,9 @@ func readFiles(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
     // Recursively check directories (can be made concurrent)
     for _, file := range files {
         if file.IsDir() {
+            if file.Name() == dirutils.ObjectDir {
+                continue
+            }
             recurseDir, err := os.Open(prefix + file.Name())
             if err != nil { panic(err) }
             defer recurseDir.Close()
