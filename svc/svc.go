@@ -21,6 +21,7 @@ import (
     "fmt"
     "os"
     "github.com/skirkpatrick/svc/initialize"
+    "github.com/skirkpatrick/svc/status"
 )
 
 const (
@@ -52,6 +53,7 @@ func main() {
             initialize.Initialize()
         case "commit":
         case "status":
+            status.Status()
         case "branch":
         case "merge":
         case "log":
