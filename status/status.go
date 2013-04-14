@@ -32,10 +32,12 @@ func GetIgnore (dir *os.File) map[string]bool {
 
 
 // GetFileStatus maps file names to their status.
-func GetFileStatus() map[string]int {
+func GetFileStatus() (map[string]int, error) {
     // Read metadata
     repo, err := meta.Open()
-    if err != nil { panic(err) }
+    if err != nil {
+        return nil, err
+    }
 
     // Open base directory
     repoDir, err := dirutils.OpenRepo()
@@ -46,7 +48,7 @@ func GetFileStatus() map[string]int {
     // Check if modified, unmodified, or new
     markStatus(repo, files)
 
-    return files
+    return files, nil
 }
 
 
@@ -90,7 +92,6 @@ func markStatus(repo *meta.Repo, files map[string]int) {
 
     for _, cached := range branch.Commit[numCommits-1].File {
         // compute sha and compare to cached
-        // TODO
         title := cached.Title
         workingSHA, err := crypto.SHA512(title)
         switch {
@@ -122,7 +123,10 @@ func getStatusBins(files map[string]int) [][]string {
 
 // printStatus prints the repo's current status
 func printStatus() {
-    files := GetFileStatus()
+    files, err := GetFileStatus()
+    if err != nil {
+        fmt.Println(err)
+    }
     bins := getStatusBins(files)
     for i := range bins {
         if len(bins[i]) == 0 { continue }
