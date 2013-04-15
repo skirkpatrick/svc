@@ -58,13 +58,13 @@ func ReadMetadata(filename string) *Repo {
 }
 
 // WriteMetadata writes repo to metadata file "file"
-func WriteMetadata(file *os.File, repo *Repo) {
+func WriteMetadata(file *os.File, repo *Repo) error {
     xml_raw, err := xml.Marshal(repo)
-    if err != nil { panic(err) }
+    if err != nil { return err }
 
     // This looks too much like C...must be a more elegant way
     _, err = file.Write(append([]byte(xml.Header), xml_raw...))
-    if err != nil { panic(err) }
+    return err
 }
 
 // InitializeRepo initializes metadata file for a new repo
@@ -86,7 +86,8 @@ func InitializeMetafile(file *os.File) {
     repo.AddBranch(branch)
     err := repo.SetCurrent("master")
     if err != nil { panic(err) }
-    WriteMetadata(file, repo)
+    err = WriteMetadata(file, repo)
+    if err != nil { panic(err) }
 }
 
 // Open returns the metadata file for the current repo (if it exists)
@@ -109,6 +110,19 @@ func Open() (*Repo, error) {
 
 
 /// Begin repo functions ///
+
+// Write writes a repo to the metadata file
+func (repo *Repo) Write() error {
+    dir, err := dirutils.OpenRepo()
+    if err != nil { return err }
+    defer dir.Close()
+    filename := dir.Name() + "/" + dirutils.ObjectDir + "/" + metafileName
+    file, err := os.Open(filename)
+    if err != nil { return err }
+    defer file.Close()
+    err = WriteMetadata(file, repo)
+    return err
+}
 
 // SetCurrent sets current branch on repo.
 // Returns error if current is not a valid branch in repo.
