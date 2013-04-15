@@ -117,7 +117,7 @@ func (repo *Repo) Write() error {
     if err != nil { return err }
     defer dir.Close()
     filename := dir.Name() + "/" + dirutils.ObjectDir + "/" + metafileName
-    file, err := os.Open(filename)
+    file, err := os.Create(filename)
     if err != nil { return err }
     defer file.Close()
     err = WriteMetadata(file, repo)
@@ -154,7 +154,7 @@ func (repo *Repo) AddBranch(branch *Branch) error {
 func (repo *Repo) Find(branchname string) (branch *Branch, pos int) {
     for i, b := range repo.Branch {
         if b.Title == branchname {
-            return &b, i
+            return &repo.Branch[i], i
         }
     }
     return nil, -1
