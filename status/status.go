@@ -39,21 +39,39 @@ func GetFileStatus() (map[string]int, error) {
         return nil, err
     }
 
+    branch, _ := repo.Find(repo.Current)
+    if branch == nil { panic(fmt.Errorf("Repo is corrupt")) }
+
+    // Check if initial commit
+    commit := (*meta.Commit) (nil)
+    numCommits := len(branch.Commit)
+    if numCommits > 0 {
+        commit = &branch.Commit[numCommits-1]
+    }
+    return CompareStatusToCommit(commit)
+}
+
+
+// CompareStatusToCommit maps file names to their status with respect
+// to a specific commit.
+func CompareStatusToCommit(commit *meta.Commit) (map[string]int, error) {
     // Open base directory
     repoDir, err := dirutils.OpenRepo()
-    if err != nil { panic(err) }
+    if err != nil {
+        return nil, err
+    }
 
-    files := readFiles(repo, repoDir, "")
+    files := readFiles(repoDir, "")
 
     // Check if modified, unmodified, or new
-    markStatus(repo, files)
+    markStatus(commit, files)
 
     return files, nil
 }
 
 
 // readFiles is a recursive function to read all files in repo
-func readFiles(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
+func readFiles(dir *os.File, prefix string) map[string]int {
     files, err := dirutils.GetDirectoryContents(dir)
     if err != nil { panic(err) }
 
@@ -68,7 +86,7 @@ func readFiles(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
             recurseDir, err := os.Open(prefix + file.Name())
             if err != nil { panic(err) }
             defer recurseDir.Close()
-            stats := readFiles(repo, recurseDir, prefix + file.Name() + "/")
+            stats := readFiles(recurseDir, prefix + file.Name() + "/")
             for key, value := range stats {
                 filemap[key] = value
             }
@@ -83,14 +101,9 @@ func readFiles(repo *meta.Repo, dir *os.File, prefix string) map[string]int {
 
 
 // markStatus marks file status
-func markStatus(repo *meta.Repo, files map[string]int) {
-    branch, _ := repo.Find(repo.Current)
-
-    // Check if initial commit
-    numCommits := len(branch.Commit)
-    if numCommits == 0 { return }
-
-    for _, cached := range branch.Commit[numCommits-1].File {
+func markStatus(commit *meta.Commit, files map[string]int) {
+    if commit == nil { return }
+    for _, cached := range commit.File {
         // compute sha and compare to cached
         title := cached.Title
         workingSHA, err := crypto.SHA512(title)
