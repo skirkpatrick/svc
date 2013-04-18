@@ -11,7 +11,7 @@ import (
 
 const (
     ObjectDir = ".svc"
-    permissions = 0777
+    Permissions = 0777
 )
 
 // Check parent directories until root for existing repo.
@@ -84,6 +84,6 @@ func GetDirectoryContents(dir *os.File) ([]os.FileInfo, error) {
 
 // InitializeRepo creates new object directory
 func InitializeRepo() {
-    err := os.Mkdir(ObjectDir, permissions)
+    err := os.Mkdir(ObjectDir, Permissions)
     if err != nil { panic(err) }
 }

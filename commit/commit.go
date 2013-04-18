@@ -4,9 +4,14 @@ import (
     "fmt"
     "time"
     "encoding/xml"
+    "os"
+    "io"
+    "compress/zlib"
+    "strings"
     "github.com/skirkpatrick/svc/meta"
     "github.com/skirkpatrick/svc/status"
     "github.com/skirkpatrick/svc/crypto"
+    "github.com/skirkpatrick/svc/dirutils"
 )
 
 
@@ -28,9 +33,74 @@ func Commit() {
     err = repo.Write()
     if err != nil { panic(err) }
     //TODO commit contents
+    err = stashFiles(branch.Title, commit)
+    if err != nil {
+        //TODO remove new commit
+        fmt.Println(err)
+        return
+    }
     fmt.Println(commit.Timestamp)
     fmt.Println(commit.Title + "\n")
     fmt.Println(commit.Message)
+}
+
+
+// stashFiles gzips all commited files and stashes the compressed versions
+// in a unique folder based on the commit time
+func stashFiles(branch string, commit *meta.Commit) error {
+    // Make unique directory .svc/BRANCH/COMMIT_TIME
+    repoDir, err := dirutils.OpenRepo()
+    if err != nil {
+        return err
+    }
+    stashDir := repoDir.Name() + "/" + dirutils.ObjectDir + "/" + branch + "/" + commit.Timestamp.String()
+    err = os.MkdirAll(stashDir, dirutils.Permissions)
+    if err != nil {
+        return err
+    }
+    // zlib compress all files
+    origDir, err := os.Getwd()
+    if err != nil {
+        os.RemoveAll(stashDir) // At this point, screw the error
+        return err
+    }
+    defer os.Chdir(origDir)
+    buffer := make([]byte, 1024)
+    for _, file := range commit.File {
+        fileDir := stashDir + "/" + file.Title
+        fileDir = fileDir[:strings.LastIndex(fileDir, "/")]
+        err = os.MkdirAll(fileDir, dirutils.Permissions)
+        if err != nil {
+            os.RemoveAll(stashDir)
+            return err
+        }
+        stashFile, err := os.Create(stashDir + "/" + file.Title)
+        if err != nil {
+            os.RemoveAll(stashDir)
+            return err
+        }
+        defer stashFile.Close()
+        origFile, err := os.Open(file.Title)
+        if err != nil {
+            os.RemoveAll(stashDir)
+            return err
+        }
+        defer origFile.Close()
+        compressor := zlib.NewWriter(stashFile)
+        defer compressor.Close()
+        for n, err := origFile.Read(buffer); n > 0; n, err = origFile.Read(buffer) {
+            if err != nil && err != io.EOF {
+                os.RemoveAll(stashDir)
+                return err
+            }
+            n, err = compressor.Write(buffer)
+            if err != nil {
+                os.RemoveAll(stashDir)
+                return err
+            }
+        }
+    }
+    return nil
 }
 
 
