@@ -146,6 +146,22 @@ func (repo *Repo) AddBranch(branch *Branch) error {
     return nil
 }
 
+
+// DeleteBranch removes an entire branch from a repo
+func (repo *Repo) DeleteBranch(branchname string) error {
+    if len(repo.Branch) == 1 {
+        return fmt.Errorf("cannot remove the last branch of a repo")
+    }
+    _, i := repo.Find(branchname)
+    if i == -1 {
+        return fmt.Errorf("branch %q does not exist", branchname)
+    }
+    copy(repo.Branch[i:], repo.Branch[i+1:])
+    repo.Branch[len(repo.Branch)-1] = Branch{}
+    repo.Branch = repo.Branch[:len(repo.Branch)-1]
+    return nil
+}
+
 // Find finds a Branch in a repo, if it exists.
 // If the branch is found, it is returned along with its
 // position in the []Branch.
@@ -190,6 +206,24 @@ func (branch *Branch) Copy() *Branch {
         newBranch.Commit[i] = *branch.Commit[i].Copy()
     }
     return newBranch
+}
+
+
+// Branch.DeleteCommit deletes a commit from the branch
+func (branch *Branch) DeleteCommit(i int) error {
+    if i >= len(branch.Commit) {
+        return fmt.Errorf("commit %d does not exist in branch %q", i, branch.Title)
+    }
+    copy(branch.Commit[i:], branch.Commit[i+1:])
+    branch.Commit[len(branch.Commit)-1] = Commit{}
+    branch.Commit = branch.Commit[:len(branch.Commit)-1]
+    return nil
+}
+
+
+// Branch.DeleteLastCommit deletes the last commit from the branch
+func (branch *Branch) DeleteLastCommit() error {
+    return branch.DeleteCommit(len(branch.Commit)-1)
 }
 
 
