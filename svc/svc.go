@@ -22,6 +22,7 @@ import (
     "os"
     "github.com/skirkpatrick/svc/initialize"
     "github.com/skirkpatrick/svc/status"
+    "github.com/skirkpatrick/svc/commit"
 )
 
 const (
@@ -52,6 +53,7 @@ func main() {
         case "init":
             initialize.Initialize()
         case "commit":
+            commit.Commit()
         case "status":
             status.Status()
         case "branch":
