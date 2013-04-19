@@ -34,7 +34,7 @@ func Commit() {
     if err != nil { panic(err) }
     err = stashFiles(branch.Title, commit)
     if err != nil {
-        //TODO remove new commit
+        branch.DeleteLastCommit()
         fmt.Println(err)
         return
     }
