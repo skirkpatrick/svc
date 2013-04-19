@@ -30,7 +30,6 @@ type Branch struct {
 
 type Commit struct {
     XMLName xml.Name `xml:"commit"`
-    SHA string `xml:"sha512"`
     Title string `xml:"title"`
     Message string `xml:"message"`
     Timestamp time.Time `xml:"timestamp"`
@@ -168,7 +167,6 @@ func (repo *Repo) Print() {
         fmt.Printf("Branch: %q\n", branch.Title)
         for _, commit := range branch.Commit {
             fmt.Printf("\tCommit: %q\n", commit.Title)
-            fmt.Printf("\tSHA512: %v\n", commit.SHA)
             fmt.Printf("\tMessage: %q\n", commit.Message)
             fmt.Printf("\tTimestamp: %v\n", commit.Timestamp)
             for _, file := range commit.File {
@@ -201,7 +199,6 @@ func (branch *Branch) Copy() *Branch {
 func (commit *Commit) Copy() *Commit {
     newCommit := new(Commit)
     newCommit.XMLName = commit.XMLName
-    newCommit.SHA = commit.SHA
     newCommit.Title = commit.Title
     newCommit.Message = commit.Message
     newCommit.Timestamp = commit.Timestamp

@@ -32,7 +32,6 @@ func Commit() {
     branch.Commit = append(branch.Commit, *commit)
     err = repo.Write()
     if err != nil { panic(err) }
-    //TODO commit contents
     err = stashFiles(branch.Title, commit)
     if err != nil {
         //TODO remove new commit
@@ -117,8 +116,6 @@ func fillCommit(commit *meta.Commit, repo *meta.Repo) error {
     if err != nil {
         return err
     }
-    //TODO figure out or get rid of commit sha
-    commit.SHA = ""
     commit.Timestamp = time.Now()
     commitFiles(commit, repo, files)
     return nil
