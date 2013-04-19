@@ -6,6 +6,7 @@ import (
     "encoding/xml"
     "os"
     "io"
+    "io/ioutil"
     "compress/zlib"
     "strings"
     "github.com/skirkpatrick/svc/meta"
@@ -124,9 +125,14 @@ func fillCommit(commit *meta.Commit, repo *meta.Repo) error {
 
 // commitPrompt prompts the user for the commit title and message
 func commitPrompt(commit *meta.Commit) error {
+    fmt.Println("To cancel the commit, leave the title empty and press ^D")
+    fmt.Println("When finished, press <ENTER>+^D")
     err := promptTitle(commit)
     if err != nil {
         return err
+    }
+    if commit.Title == "" {
+        return fmt.Errorf("Commit aborted due to empty title")
     }
     err = promptMessage(commit)
     return err
@@ -135,16 +141,24 @@ func commitPrompt(commit *meta.Commit) error {
 
 // promptTitle prompts the user for the commit title
 func promptTitle(commit *meta.Commit) error {
-    //TODO
-    commit.Title = "Temporary title"
+    fmt.Println("Enter a title for this commit:")
+    buf, err := ioutil.ReadAll(os.Stdin)
+    if err != nil {
+        return err
+    }
+    commit.Title = strings.TrimSpace(string(buf))
     return nil
 }
 
 
 // promptMessage prompts the user for the commit message
 func promptMessage(commit *meta.Commit) error {
-    //TODO
-    commit.Message = "Temporary commit message"
+    fmt.Println("Enter a message for this commit:")
+    buf, err := ioutil.ReadAll(os.Stdin)
+    if err != nil {
+        return err
+    }
+    commit.Message = strings.TrimSpace(string(buf))
     return nil
 }
 
