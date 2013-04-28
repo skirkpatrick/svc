@@ -82,6 +82,19 @@ func GetDirectoryContents(dir *os.File) ([]os.FileInfo, error) {
 }
 
 
+// DeleteIfEmpty deletes a directory if the contents are empty
+func DeleteIfEmpty(dir string) error {
+    dirp, err := os.Open(dir)
+    if err != nil { return err }
+    contents, err := dirp.Readdirnames(1)
+    if err != nil { return err }
+    if len(contents) == 0 {
+        err = os.Remove(dir)
+    }
+    return err
+}
+
+
 // InitializeRepo creates new object directory
 func InitializeRepo() {
     err := os.Mkdir(ObjectDir, Permissions)
