@@ -20,10 +20,12 @@ package main
 import (
     "fmt"
     "os"
+    "strconv"
     "github.com/skirkpatrick/svc/initialize"
     "github.com/skirkpatrick/svc/status"
     "github.com/skirkpatrick/svc/commit"
     "github.com/skirkpatrick/svc/reset"
+    "github.com/skirkpatrick/svc/revert"
 )
 
 const (
@@ -63,6 +65,16 @@ func main() {
         case "reset":
             reset.Reset()
         case "revert":
+            if len(os.Args) != 3 {
+                displayHelp()
+                return
+            }
+            n, err := strconv.Atoi(os.Args[2])
+            if err != nil {
+                fmt.Println(err)
+                os.Exit(2)
+            }
+            revert.Revert(n)
         case "delete":
         case "tutorial":
         case "help":
