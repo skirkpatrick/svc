@@ -27,6 +27,7 @@ import (
     "github.com/skirkpatrick/svc/reset"
     "github.com/skirkpatrick/svc/revert"
     "github.com/skirkpatrick/svc/remove"
+    "github.com/skirkpatrick/svc/log"
 )
 
 const (
@@ -63,6 +64,7 @@ func main() {
         case "branch":
         case "merge":
         case "log":
+            log.Display()
         case "reset":
             reset.Reset()
         case "revert":
