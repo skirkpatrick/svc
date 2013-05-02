@@ -15,6 +15,7 @@ func Remove() {
         err := dirutils.RemoveRepo()
         if err != nil {
             fmt.Println(err)
+            return
         }
     }
     fmt.Println("Repo successfully removed.")
