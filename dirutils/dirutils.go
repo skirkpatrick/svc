@@ -100,3 +100,15 @@ func InitializeRepo() {
     err := os.Mkdir(ObjectDir, Permissions)
     if err != nil { panic(err) }
 }
+
+
+// RemoveRepo deletes the current repo's metadata, leaving working files.
+func RemoveRepo() error {
+    repo, err := OpenRepo()
+    if err != nil {
+        return err
+    }
+    defer repo.Close()
+    err = os.RemoveAll(repo.Name() + "/" + ObjectDir)
+    return err
+}

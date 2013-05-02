@@ -26,6 +26,7 @@ import (
     "github.com/skirkpatrick/svc/commit"
     "github.com/skirkpatrick/svc/reset"
     "github.com/skirkpatrick/svc/revert"
+    "github.com/skirkpatrick/svc/remove"
 )
 
 const (
@@ -76,6 +77,7 @@ func main() {
             }
             revert.Revert(n)
         case "delete":
+            remove.Remove()
         case "tutorial":
         case "help":
             displayHelp()
