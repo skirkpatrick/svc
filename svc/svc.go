@@ -37,6 +37,7 @@ const (
                   "init\t\tInitialize new SVC repo in current directory\n" +
                   "commit\t\tCommit current changes\n" +
                   "status\t\tList branch status\n" +
+                  "branch\t\tList branches\n" +
                   "branch <b>\tCreate new feature branch\n" +
                   "merge <b>\tMerge branch <b> into this branch\n" +
                   "log\t\tList commit history\n" +
