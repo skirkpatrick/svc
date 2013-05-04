@@ -28,6 +28,7 @@ import (
     "github.com/skirkpatrick/svc/revert"
     "github.com/skirkpatrick/svc/remove"
     "github.com/skirkpatrick/svc/log"
+    "github.com/skirkpatrick/svc/branch"
 )
 
 const (
@@ -36,7 +37,7 @@ const (
                   "init\t\tInitialize new SVC repo in current directory\n" +
                   "commit\t\tCommit current changes\n" +
                   "status\t\tList branch status\n" +
-                  "branch\t\tCreate new feature branch\n" +
+                  "branch <b>\tCreate new feature branch\n" +
                   "merge <b>\tMerge branch <b> into this branch\n" +
                   "log\t\tList commit history\n" +
                   "reset\t\tReset all current changes\n" +
@@ -62,6 +63,11 @@ func main() {
         case "status":
             status.Status()
         case "branch":
+            if len(os.Args) == 3 {
+                branch.Branch(os.Args[2])
+            } else {
+                branch.Display()
+            }
         case "merge":
         case "log":
             log.Display()

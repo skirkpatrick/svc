@@ -25,6 +25,8 @@ type Repo struct {
 type Branch struct {
     XMLName xml.Name `xml:"branch"`
     Title string `xml:"title"`
+    Parent string `xml:"parent"`
+    Child []string `xml:"child"`
     Commit []Commit `xml:"commit"`
 }
 
