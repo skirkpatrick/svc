@@ -21,6 +21,7 @@ import (
     "fmt"
     "os"
     "strconv"
+    "strings"
     "github.com/skirkpatrick/svc/initialize"
     "github.com/skirkpatrick/svc/status"
     "github.com/skirkpatrick/svc/commit"
@@ -64,8 +65,8 @@ func main() {
         case "status":
             status.Status()
         case "branch":
-            if len(os.Args) == 3 {
-                branch.Branch(os.Args[2])
+            if len(os.Args) >= 3 {
+                branch.Branch(strings.Join(os.Args[2:], " "))
             } else {
                 branch.Display()
             }

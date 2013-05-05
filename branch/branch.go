@@ -2,8 +2,10 @@ package branch
 
 import (
     "fmt"
+    "os/exec"
     "github.com/skirkpatrick/svc/meta"
     "github.com/skirkpatrick/svc/status"
+    "github.com/skirkpatrick/svc/dirutils"
 )
 
 
@@ -78,5 +80,20 @@ func newBranch(title string) (*meta.Branch, error) {
         return nil, err
     }
     err = repo.Write()
+    if err != nil {
+        return nil, err
+    }
+    err = copyStash(current.Title, branch.Title)
     return branch, err
+}
+
+
+// copyStash copies parent's stash directory to child's
+func copyStash(parent string, child string) error {
+    repoDir, err := dirutils.OpenRepo()
+    if err != nil {
+        return err
+    }
+    metaDir := repoDir.Name() + "/" + dirutils.ObjectDir + "/"
+    return exec.Command("cp", "-r", metaDir + parent, metaDir + child).Run()
 }
