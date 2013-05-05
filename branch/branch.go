@@ -65,6 +65,10 @@ func newBranch(title string) (*meta.Branch, error) {
     if err != nil {
         return nil, err
     }
+    if repo.SetCurrent(title) == nil {
+        fmt.Println("Switched to branch: " + title)
+        return nil, repo.Write()
+    }
     current, _ := repo.Find(repo.Current)
     if current == nil { panic(fmt.Errorf("Repo is corrupt")) }
     branch := current.Copy()
