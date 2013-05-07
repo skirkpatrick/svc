@@ -71,8 +71,8 @@ func newBranch(title string) (*meta.Branch, error) {
         if err != nil {
             return nil, err
         }
+        fmt.Println("Switched to branch: \x1b[32;1m" + title + "\x1b[0m")
         revert.Revert(0)
-        fmt.Println("Switched to branch: " + title)
         return nil, nil
     }
     current, _ := repo.Find(repo.Current)
@@ -94,7 +94,11 @@ func newBranch(title string) (*meta.Branch, error) {
         return nil, err
     }
     err = copyStash(current.Title, branch.Title)
-    return branch, err
+    if err != nil {
+        return nil, err
+    }
+    fmt.Println("Created new branch: \x1b[32;1m" + title + "\x1b[0m")
+    return branch, nil
 }
 
 
