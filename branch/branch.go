@@ -6,6 +6,7 @@ import (
     "github.com/skirkpatrick/svc/meta"
     "github.com/skirkpatrick/svc/status"
     "github.com/skirkpatrick/svc/dirutils"
+    "github.com/skirkpatrick/svc/revert"
 )
 
 
@@ -66,8 +67,13 @@ func newBranch(title string) (*meta.Branch, error) {
         return nil, err
     }
     if repo.SetCurrent(title) == nil {
+        err = repo.Write()
+        if err != nil {
+            return nil, err
+        }
+        revert.Revert(0)
         fmt.Println("Switched to branch: " + title)
-        return nil, repo.Write()
+        return nil, nil
     }
     current, _ := repo.Find(repo.Current)
     if current == nil { panic(fmt.Errorf("Repo is corrupt")) }
