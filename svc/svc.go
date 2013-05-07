@@ -39,13 +39,13 @@ const (
                   "commit\t\tCommit current changes\n" +
                   "status\t\tList branch status\n" +
                   "branch\t\tList branches\n" +
-                  "branch <b>\tCreate new feature branch\n" +
-                  "merge <b>\tMerge branch <b> into this branch\n" +
+                  "branch <b>\tCreate new feature branch or switch to existing one\n" +
+                  //"merge <b>\tMerge branch <b> into this branch\n" +
                   "log\t\tList commit history\n" +
                   "reset\t\tReset all current changes\n" +
                   "revert <v>\tRevert to <v> commits ago\n" +
                   "delete\t\tRemove SVC repo in current directory\n" +
-                  "tutorial\tLearn to use SVC\n" +
+                  //"tutorial\tLearn to use SVC\n" +
                   "help\t\tDisplay this message\n"
 )
 
@@ -70,7 +70,7 @@ func main() {
             } else {
                 branch.Display()
             }
-        case "merge":
+        //case "merge":
         case "log":
             log.Display()
         case "reset":
@@ -88,7 +88,7 @@ func main() {
             revert.Revert(n)
         case "delete":
             remove.Remove()
-        case "tutorial":
+        //case "tutorial":
         case "help":
             displayHelp()
         default:
