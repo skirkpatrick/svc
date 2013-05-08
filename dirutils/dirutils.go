@@ -6,6 +6,7 @@ package dirutils
 
 import (
     "os"
+    "io"
     "fmt"
 )
 
@@ -87,7 +88,7 @@ func DeleteIfEmpty(dir string) error {
     dirp, err := os.Open(dir)
     if err != nil { return err }
     contents, err := dirp.Readdirnames(1)
-    if err != nil { return err }
+    if err != nil && err != io.EOF { return err }
     if len(contents) == 0 {
         err = os.Remove(dir)
     }
