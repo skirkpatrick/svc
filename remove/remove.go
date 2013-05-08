@@ -17,8 +17,10 @@ func Remove() {
             fmt.Println(err)
             return
         }
+        fmt.Println("Repo successfully removed.")
+    } else {
+        fmt.Println("Repo removal aborted.")
     }
-    fmt.Println("Repo successfully removed.")
 }
 
 
