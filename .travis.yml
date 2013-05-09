@@ -1,0 +1,7 @@
+language: go
+env: BUILD_PATH=$GOPATH/src/github.com/skirkpatrick/svc
+install:
+  - mkdir -p $BUILD_PATH
+  - mv * $BUILD_PATH
+  - cd $BUILD_PATH
+script: go build
