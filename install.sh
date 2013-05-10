@@ -1,13 +1,5 @@
 #!/usr/bin/env sh
 
-which gx > /dev/null
-OUT=$?
-if [ $OUT -eq 0 ];then
-   echo "User account found!"
-else
-   echo "User account does not exists in /etc/passwd file!"
-fi
-
 echo "Welcomt to SVC version control system installer."
 echo "This script is going to install and set up SVC version control system."
 
