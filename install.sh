@@ -1,7 +1,5 @@
 #!/usr/bin/env sh
 
-
-
 which gx > /dev/null
 OUT=$?
 if [ $OUT -eq 0 ];then
@@ -28,9 +26,9 @@ if [ $? -ne 0 ]; then
 
   if [ "$answer" == "Y" ]; then
     echo "Installing GO"
-    # git clone https://github.com/skirkpatrick/GetGo.git
-    # GetGo/getgo.sh
-    # rm -rf GetGo
+    git clone https://github.com/skirkpatrick/GetGo.git
+    GetGo/getgo.sh
+    rm -rf GetGo
     echo "Done Installing GO"
   else
     echo "Error: Cannot install SVC without installing GO"
@@ -41,8 +39,8 @@ else
 fi
 
 echo "Installing SVC"
-# go get github.com/skirkpatrick/svc
-# go install
+go get github.com/skirkpatrick/svc
+go install
 
 echo "Done Installing SVC"
 echo "For more information about SVC version control system type:"
