@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Get all of the required packages for development
+# You should only have to run this once to get started
+
+# internal deps
+for i in initialize status commit reset revert remove log branch
+do
+  go get github.com/skirkpatrick/svc/$i
+done
