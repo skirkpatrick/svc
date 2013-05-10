@@ -28,7 +28,9 @@ If you don't have Go installed, you need it. I recommend using my [install scrip
 
 Assuming you have [Go](http://golang.org/doc/install) installed and have a workspace setup through [GOPATH](http://golang.org/doc/code.html):
 
-`$ go get github.com/skirkpatrick/svc`
+```sh
+$ go get github.com/skirkpatrick/svc
+```
 
 
 ###Basic usage
@@ -39,40 +41,58 @@ All commands begin with `svc` followed by the command name and any arguments, if
 
 ####Create a repo
 
-`$ svc init`
+```sh
+$ svc init
+```
 
 ####Commit changes
 
-`$ svc commit`
+```sh
+$ svc commit
+```
 
 ####Check status since last commit
 
-`$ svc status`
+```sh
+$ svc status
+```
 
 ####Reset to state of last commit
 
-`$ svc reset`
+```sh
+$ svc reset
+```
 
 ####Revert 5 commits
 
-`$ svc revert 5`
+```sh
+$ svc revert 5
+```
 
 ####View change log
 
-`$ svc log`
+```sh
+$ svc log
+```
 
 ####View list of all branches
 
-`$ svc branch`
+```sh
+$ svc branch
+```
 
 ####Create a new branch or checkout existing branch
 
-`$ svc branch branch_name`
+```sh
+$ svc branch branch_name
+```
 
-Branch names can contain any characters that folders/files can, including white space
+Branch names can contain any characters that folders/files can, including white space.
 
 ####Delete repo
 
-`$ svc delete`
+```sh
+$ svc delete
+```
 
-Deleting a repo will leave the working directory's contents in their current state
+Deleting a repo will leave the working directory's contents in their current state.
