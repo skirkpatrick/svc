@@ -33,6 +33,7 @@ fi
 echo "Installing SVC"
 go get github.com/skirkpatrick/svc
 go install
+mv svc /usr/local/bin/
 
 echo "Done Installing SVC"
 echo "For more information about SVC version control system type:"
