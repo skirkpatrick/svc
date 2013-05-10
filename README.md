@@ -24,6 +24,8 @@ Find bugs, take a look at the issues, create new issues, submit pull requests. I
 
 Currently, only Linux is supported, though I'm pretty sure it will work fine on Mac OS X, too.
 
+If you don't have Go installed, you need it. I recommend using my [install script](https://github.com/skirkpatrick/GetGo), or you can do it manually.
+
 Assuming you have [Go](http://golang.org/doc/install) installed and have a workspace setup through [GOPATH](http://golang.org/doc/code.html):
 
 `$ go get github.com/skirkpatrick/svc`
