@@ -24,6 +24,16 @@ Find bugs, take a look at the issues, create new issues, submit pull requests. I
 
 Currently, only Linux is supported, though I'm pretty sure it will work fine on Mac OS X, too.
 
+####Easy install
+
+Just copy/paste the following into terminal. It will install SVC, as well as Go if you don't have it.
+
+```sh
+$ wget https://raw.github.com/skirkpatrick/svc/master/install.sh && source install.sh && rm install.sh
+```
+
+####Advanced install
+
 If you don't have Go installed, you need it. I recommend using my [install script](https://github.com/skirkpatrick/GetGo), or you can do it manually.
 
 Assuming you have [Go](http://golang.org/doc/install) installed and have a workspace setup through [GOPATH](http://golang.org/doc/code.html):
