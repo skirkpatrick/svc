@@ -18,7 +18,14 @@ if [ $? -ne 0 ]; then
 
   if [ "$answer" == "Y" ]; then
     echo "Installing Go"
-    wget https://raw.github.com/skirkpatrick/GetGo/master/getgo.sh
+    if [ "`which wget`" != "" ]; then
+        wget https://raw.github.com/skirkpatrick/GetGo/master/getgo.sh
+    elif [ "`which curl`" != "" ]; then
+        curl https://raw.github.com/skirkpatrick/GetGo/master/getgo.sh >getgo.sh
+    else
+        echo "Either wget or curl must be installed to download Go!"
+        exit 1
+    fi
     source getgo.sh
     rm getgo.sh
     echo "Done Installing Go"

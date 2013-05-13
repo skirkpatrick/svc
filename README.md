@@ -32,6 +32,12 @@ Just copy/paste the following into terminal. It will install SVC, as well as Go 
 $ wget https://raw.github.com/skirkpatrick/svc/master/install.sh && source install.sh && rm install.sh
 ```
 
+If you don't have wget (likely if you're on a Mac), you can use curl:
+
+```sh
+$ curl https://raw.github.com/skirkpatrick/svc/master/install.sh >install.sh && source install.sh && rm install.sh
+```
+
 ####Advanced install
 
 If you don't have Go installed, you need it. I recommend using my [install script](https://github.com/skirkpatrick/GetGo), or you can do it manually.
