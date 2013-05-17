@@ -3,9 +3,7 @@
 echo "Welcome to SVC version control system uninstaller."
 echo "WARNING: This script is going to uninstall SVC version control system."
 
-GOROOT=/usr/local/go # Only change this if you know what you're doing.
-VERSION=1.0.3
-DIR=$GOROOT/$VERSION/src/pkg/github.com/skirkpatrick
+DIR=$GOPATH/src/github.com/skirkpatrick
 
 answer=""
 while [ "$answer" != "Y" -a "$answer" != "N" ]; do
